@@ -30,22 +30,26 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod()
 
-# 1. Filtriamo il DataFrame per il rinoceronte specifico
-# Assumiamo che la colonna dell'identificativo si chiami 'rhino_id' 
-# e quella dello stato 'is_dehorned' (booleana)
-rhino_data = df[df['rhino_id'] == 'MPGRBF-02-05'].copy()
+# PRE-REQUISITO: Caricamento e conversione (da fare una volta sola)
+df = pd.read_csv('rhinos.csv', sep=';')
+df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y')
+df['is_dehorned'] = df['Horn'] == 'Dehorned'
 
-# 2. Ordiniamo i dati per data (come richiesto dal presupposto dell'Ex 3)
-rhino_data = rhino_data.sort_values('date')
+# --- INIZIO ESERCIZIO 4 ---
 
-# 3. Trasformiamo le colonne in una lista di tuple (data, stato)
-# Usiamo zip per accoppiare i valori delle due colonne
-rhino_list = list(zip(rhino_data['date'], rhino_data['is_dehorned']))
+# 1. Filtriamo usando i nomi reali del file
+rhino_data = df[df['RhinosAtSighting'] == 'MPGRBF-02-05'].copy()
 
-# 4. Applichiamo la funzione dehorn_trend
+# 2. Ordiniamo per 'Date' (maiuscola come nel CSV)
+rhino_data = rhino_data.sort_values('Date')
+
+# 3. Creiamo la lista di tuple usando le colonne corrette
+rhino_list = list(zip(rhino_data['Date'], rhino_data['is_dehorned']))
+
+# 4. Applichiamo la funzione (che rimane identica, è perfetta così!)
 trend_result = dehorn_trend(rhino_list)
 
-# 5. Visualizziamo il risultato
+# 5. Visualizziamo
 print(f"Trend dei cambiamenti per il rinoceronte MPGRBF-02-05:")
 for date, state in trend_result:
     status_str = "Dehorned" if state else "Horned"
