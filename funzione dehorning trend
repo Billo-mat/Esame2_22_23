@@ -1,0 +1,31 @@
+import pandas as pd
+from typing import List, Tuple
+
+def dehorn_trend(data: List[Tuple[pd.Timestamp, bool]]) -> List[Tuple[pd.Timestamp, bool]]:
+    """
+    Restituisce solo le coppie in cui lo stato (True/False) cambia, 
+    mantenendo l'ultima occorrenza di ogni sequenza identica.
+
+    >>> data = [(pd.to_datetime('1.1.1989'), True), (pd.to_datetime('1.1.1990'), False), (pd.to_datetime('1.1.1995'), False)]
+    >>> dehorn_trend(data)
+    [(pd.Timestamp('1989-01-01 00:00:00'), True), (pd.Timestamp('1995-01-01 00:00:00'), False)]
+    """
+    if not data:
+        return []
+
+    result = []
+    
+    # Iteriamo sulla lista confrontando l'elemento corrente con il successivo
+    for i in range(len(data)):
+        current_state = data[i][1]
+        
+        # Se siamo all'ultimo elemento OPPURE lo stato successivo è diverso
+        if i == len(data) - 1 or data[i+1][1] != current_state:
+            result.append(data[i])
+            
+    return result
+
+# Esecuzione del test
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
