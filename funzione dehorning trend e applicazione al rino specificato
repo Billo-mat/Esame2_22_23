@@ -29,3 +29,24 @@ def dehorn_trend(data: List[Tuple[pd.Timestamp, bool]]) -> List[Tuple[pd.Timesta
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+
+# 1. Filtriamo il DataFrame per il rinoceronte specifico
+# Assumiamo che la colonna dell'identificativo si chiami 'rhino_id' 
+# e quella dello stato 'is_dehorned' (booleana)
+rhino_data = df[df['rhino_id'] == 'MPGRBF-02-05'].copy()
+
+# 2. Ordiniamo i dati per data (come richiesto dal presupposto dell'Ex 3)
+rhino_data = rhino_data.sort_values('date')
+
+# 3. Trasformiamo le colonne in una lista di tuple (data, stato)
+# Usiamo zip per accoppiare i valori delle due colonne
+rhino_list = list(zip(rhino_data['date'], rhino_data['is_dehorned']))
+
+# 4. Applichiamo la funzione dehorn_trend
+trend_result = dehorn_trend(rhino_list)
+
+# 5. Visualizziamo il risultato
+print(f"Trend dei cambiamenti per il rinoceronte MPGRBF-02-05:")
+for date, state in trend_result:
+    status_str = "Dehorned" if state else "Horned"
+    print(f"- Data: {date.strftime('%Y-%m-%d')} | Stato: {status_str}")
