@@ -1,0 +1,21 @@
+import pandas as pd
+
+# 1. Caricamento con il separatore corretto
+df = pd.read_csv('rhinos.csv', sep=';')
+
+# 2. Conversione delle date in oggetti datetime di Pandas
+df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y')
+
+# 3. Creazione della colonna booleana per gli esercizi 3, 4 e 5
+# True se Dehorned, False se Horned
+df['is_dehorned'] = df['Horn'] == 'Dehorned'
+
+# Vediamo le prime righe per conferma
+print(df.head())
+
+# Calcoliamo il rapporto Dehorned / Totale avvistamenti per ogni rinoceronte
+# Nota: La colonna ID nel file si chiama 'RhinosAtSighting'
+ratio_per_rhino = df.groupby('RhinosAtSighting')['is_dehorned'].mean()
+
+print("Rapporto di avvistamenti senza corno:")
+print(ratio_per_rhino)
